@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Usuários Cadastrados</title>
+</head>
+<body>
+    <header>
+        <h1>Biblioteca Divertida</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">Início</a>
+            <a href="{{ url_for('listar_livros') }}">Livros Disponíveis</a>
+            <a href="{{ url_for('cadastrar_usuario') }}">Cadastrar Usuário</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Usuários Cadastrados</h2>
+        <ul>
+            {% for usuario in usuarios %}
+            <li>{{ usuario.nome }}</li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>
