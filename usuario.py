@@ -4,7 +4,7 @@ class Usuario:
         self.livros_emprestados = []
 
     def pegar_emprestado(self, livro):
-        if livro.emprestar():
+        if livro.emprestar(self):  # Passa o usuário ao emprestar
             self.livros_emprestados.append(livro)
             return True
         return False

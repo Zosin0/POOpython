@@ -8,9 +8,9 @@ class Biblioteca:
 
     def listar_livros_disponiveis(self):
         return [livro for livro in self.livros if not livro.emprestado]
-
+   
     def adicionar_usuario(self, usuario):
-        self.usuarios.append(usuario)
+        self.usuarios.append(usuario)  # Adicionando o usuário à lista
 
     def buscar_usuario(self, nome):
         for usuario in self.usuarios:
@@ -25,7 +25,10 @@ class Biblioteca:
         return None
 
     # Método a sem implementado
-
     def listar_livros_emprestados(self):
         """Método para listar livros que estão emprestados."""
         return [livro for livro in self.livros if livro.emprestado]
+
+    def listar_usuarios(self):
+        """Método para listar livros que estão emprestados."""
+        return [usuario for usuario in self.usuarios]

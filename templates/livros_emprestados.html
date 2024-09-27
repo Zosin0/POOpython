@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Livros Emprestados</title>
 </head>
+
 <body>
     <header>
         <h1>Biblioteca Divertida</h1>
@@ -16,12 +18,21 @@
         </nav>
     </header>
     <main>
-        <h2>Livros Emprestados</h2>
         <ul>
             {% for livro in livros %}
-            <li>{{ livro.titulo }} - Emprestado</li>
+            <li>{{ livro.titulo }} - Emprestado para {{ livro.usuario_emprestou.nome }}
+                <form action="{{ url_for('devolver_livro') }}" method="POST"
+                    style="display:flex; flex-direction: column;">
+                    <div style="display: inline;">
+                        <input type="hidden" name="titulo" value="{{ livro.titulo }}">
+                        <input type="hidden" name="usuario" value="{{ livro.usuario_emprestou.nome }}">
+                        <button type="submit">Devolver</button>
+                    </div>
+                </form>
+            </li>
             {% endfor %}
         </ul>
     </main>
 </body>
+
 </html>

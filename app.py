@@ -28,7 +28,8 @@ def cadastrar_livro():
 @app.route('/livros')
 def listar_livros():
     livros = biblioteca.listar_livros_disponiveis()
-    return render_template('livros.html', livros=livros)
+    usuarios = biblioteca.listar_usuarios()
+    return render_template('livros.html', livros=livros, usuarios=usuarios)
 
 # Emprestar um livro
 @app.route('/emprestar', methods=['POST'])
@@ -36,27 +37,32 @@ def emprestar_livro():
     titulo = request.form.get('titulo')
     nome_usuario = request.form.get('usuario')
 
+    # Buscar o usuário e o livro pelo nome/título
     usuario = biblioteca.buscar_usuario(nome_usuario)
     livro = biblioteca.buscar_livro(titulo)
 
+    # Verificar se o livro e o usuário existem, e se o empréstimo pode ser realizado
     if usuario and livro and usuario.pegar_emprestado(livro):
         return redirect(url_for('listar_livros'))
+    
     return 'Erro ao emprestar livro', 400
 
+
 # Devolver um livro
-@app.route('/devolver', methods=['GET', 'POST'])
+@app.route('/devolver_livro', methods=['POST'])
 def devolver_livro():
-    if request.method == 'POST':
-        titulo = request.form.get('titulo')
-        nome_usuario = request.form.get('usuario')
+    titulo = request.form.get('titulo')
+    nome_usuario = request.form.get('usuario')
 
-        usuario = biblioteca.buscar_usuario(nome_usuario)
-        livro = biblioteca.buscar_livro(titulo)
+    # Buscar o usuário e o livro pelo nome/título
+    usuario = biblioteca.buscar_usuario(nome_usuario)
+    livro = biblioteca.buscar_livro(titulo)
 
-        if usuario and livro and usuario.devolver_livro(livro):
-            return redirect(url_for('listar_livros'))
-        return 'Erro ao devolver livro', 400
-    return render_template('devolver_livro.html')
+    # Verificar se o livro e o usuário existem, e se a devolução pode ser realizada
+    if usuario and livro and usuario.devolver_livro(livro):
+        return redirect(url_for('listar_livros_emprestados'))
+    
+    return 'Erro ao devolver livro', 400
 
 # Cadastrar novos usuários
 @app.route('/cadastrar_usuario', methods=['GET', 'POST'])
@@ -64,9 +70,10 @@ def cadastrar_usuario():
     if request.method == 'POST':
         nome = request.form.get('nome')
         usuario = Usuario(nome)
-        biblioteca.adicionar_usuario(usuario)
+        biblioteca.adicionar_usuario(usuario)  # Adicionando o usuário à lista
         return redirect(url_for('listar_usuarios'))
     return render_template('cadastrar_usuario.html')
+
 
 # Listar usuários cadastrados
 @app.route('/usuarios')
@@ -77,8 +84,9 @@ def listar_usuarios():
 # Ver livros emprestados
 @app.route('/livros_emprestados')
 def listar_livros_emprestados():
-    livros = [livro for livro in biblioteca.livros if livro.emprestado]
+    livros = biblioteca.listar_livros_emprestados()
     return render_template('livros_emprestados.html', livros=livros)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
